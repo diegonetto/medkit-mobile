@@ -77,29 +77,40 @@ angular.module('Medkit.controllers', [])
 
 })
 
-.controller('PatientCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $ionicListDelegate, PatientService, NFCService, PrescriptionEnumService, PrescriptionService, DrugService) {
-  $scope.patient = PatientService.get({ _id: $stateParams.patientId });
-  $scope.callbackId = NFCService.register(function (tagId) {
-    console.log('Attempting to add patient tag');
-    $scope.patient.tag_id = tagId;
-    console.log($scope.patient._id);
-    $scope.patient.$update({ _id: $scope.patient._id }, function () {
-      console.log('Updated patient!!');
-    }, function (err) {
-      console.log('failed to add patient tag');
-      console.log(JSON.stringify(err));
-    });
-  });
+.controller('PatientCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $ionicListDelegate, PatientService, NFCService, PrescriptionEnumService, PrescriptionService, DrugService, DosageService) {
 
+  $scope.dosage = {};
 
-  $scope.prescription = {};
-  $scope.selectedPrescriptions = [];
-  $scope.drugs = DrugService.query();
   $scope.updatePrescriptions = function () {
+    console.log($scope.patient._id);
     $scope.prescriptions = PrescriptionService.query({ patient_id: $scope.patient._id });
     $scope.prescription = {};
   };
-  $scope.updatePrescriptions();
+
+  $scope.patient = PatientService.get({ _id: $stateParams.patientId }, function (patient) {
+    $scope.updatePrescriptions();
+    console.log(patient.tag_id);
+    if (!patient.tag_id) {
+      $scope.patientTagCallbackID = NFCService.register(function (tagId) {
+        console.log('Attempting to add patient tag');
+        $scope.patient.tag_id = tagId;
+        console.log($scope.patient._id);
+
+        $scope.patient.$update({ _id: $scope.patient._id }, function () {
+          console.log('Updated patient!!');
+          NFCService.deRegister($scope.patientTagCallbackID);
+        }, function (err) {
+          console.log('failed to add patient tag');
+          console.log(JSON.stringify(err));
+        });
+      });
+    }
+  });
+ 
+  $scope.prescription = {};
+  $scope.selectedPrescriptions = [];
+  $scope.drugs = DrugService.query();
+
 
   $scope.getDrug = function(drug_id) {
     return _.filter($scope.drugs, function(drug) {
@@ -178,14 +189,52 @@ angular.module('Medkit.controllers', [])
     $ionicListDelegate.closeOptionButtons();
   };
 
+
+  // Fill prescription modal
+  $ionicModal.fromTemplateUrl('templates/fill-prescription-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function (modal) {
+    $scope.fillModal = modal;
+  });
+
+  $scope.openFillModal = function() {
+    $scope.fillModal.show();
+    $scope.dosageTagCallbackID = NFCService.register(function (tagId) {
+      console.log('Attempting to add DOSAGE tag');
+      $scope.dosage.tag_id = tagId;
+      $scope.$apply();
+      console.log(JSON.stringify($scope.dosage));
+    });
+  };
+
+  $scope.closeFillModal = function() {
+    $scope.fillModal.hide();
+    NFCService.deRegister($scope.dosageTagCallbackID);
+  };
+
+  // Fill prescription button
   $scope.fillPrescription = function () {
-    console.log('Fill these guys!');
+    console.log('Fill these guys in a modal');
+    $scope.openFillModal();
     console.log($scope.selectedPrescriptions);
   };
 
+  // Submit the dosage information
+  $scope.submitDosage = function () {
+    var dosage = new DosageService({
+      tag_id: $scope.dosage.tag_id,
+      prescriptions: $scope.selectedPrescriptions,
+      patient_id: $scope.patient._id
+    });
+    dosage.$save();
+    $scope.closeFillModal();
+  };
+
   $scope.$on('$destroy', function () {
-    NFCService.deRegister($scope.callbackId);
+    NFCService.deRegister($scope.patientTagCallbackID);
     $scope.modal.remove();
+    $scope.fillModal.remove();
   });
 })
 

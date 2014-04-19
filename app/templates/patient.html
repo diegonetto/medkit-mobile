@@ -1,8 +1,8 @@
 <ion-view title="{{patient.last_name}}, {{patient.first_name}}">
   <ion-nav-buttons side="right">
-    <a class="button button-clear" href="#/app/fill-prescription"
+    <button class="button button-clear"
       ng-click="fillPrescription()"
-      ng-show="selectedPrescriptions.length > 0">Fill</a>
+      ng-show="selectedPrescriptions.length > 0">Fill</button>
     <button class="button button-clear ion-plus-round"
       ng-click="openModal()"
       ng-hide="selectedPrescriptions.length > 0"></button>
