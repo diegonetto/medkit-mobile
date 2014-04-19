@@ -1,0 +1,48 @@
+<div class="modal">
+  <ion-header-bar class="bar-assertive">
+    <h1 class="title">New Patient</h1>
+  </ion-header-bar>
+  <ion-content>
+    <div class="list list-inset">
+
+      <form name="form">
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">First Name</span>
+          <input type="text" name="firstName"
+            ng-model="patient.first_name"
+            required>
+        </label>
+
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Last Name</span>
+          <input type="text" name="lastName"
+            ng-model="patient.last_name"
+            required>
+        </label>
+
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Telephone</span>
+          <input type="tel" name="telephone" maxlength="10"
+            ng-maxlength=10
+            ng-minlength=10
+            ng-model="patient.telephone"
+            required>
+        </label>
+
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Address</span>
+          <input type="text" name="address"
+            ng-model="patient.address"
+            required>
+        </label>
+
+        <button class="button button-block button-assertive"
+          ng-disabled="!form.$valid"
+          ng-click="addPatient()">
+          Register
+        </button>
+      </form>
+
+    </div>
+  </ion-content>
+</div>

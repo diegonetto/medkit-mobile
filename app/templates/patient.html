@@ -1,0 +1,33 @@
+<ion-view title="{{patient.last_name}}, {{patient.first_name}}">
+  <ion-content class="has-header">
+    <div class="card">
+      <div class="item item-divider">
+        Associated Tags
+      </div>
+
+      <div class="item item-divder" ng-hide="patient.tag_id">
+        Scan a tag
+      </div>
+      
+      <div class="item" ng-show="patient.tag_id">
+        {{patient.tag_id}}
+      </div> 
+    </div>
+
+    <div class="list">
+      <div class="item item-divider">
+        Prescriptions
+        <button class="button button-icon ion-plus-round add-float"></button>
+      </div>
+    </div>
+
+    <div class="list card"
+      ng-repeat="prescription in prescriptions">
+      <div class="item">
+        <h2>{{getDrug(prescription.drug_id).brand}} ({{ getDrug(prescription.drug_id).name }})</h2>
+        <p>{{prescription.amount}} {{prescription.unit}}, {{prescription.interval}} x {{prescription.intervalType}}</p>
+      </div>
+    </div>
+    
+  </ion-content>
+</ion-view>

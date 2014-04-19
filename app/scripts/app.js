@@ -6,7 +6,12 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('Medkit', ['ionic', 'Medkit.controllers'])
+angular.module('Medkit', [
+  'ionic',
+  'ngResource',
+  'Medkit.controllers',
+  'Medkit.services'
+])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -26,7 +31,7 @@ angular.module('Medkit', ['ionic', 'Medkit.controllers'])
       controller: 'AppCtrl'
     })
 
-    .state('app.search', {
+ /*   .state('app.search', {
       url: '/search',
       views: {
         'menuContent' :{
@@ -42,27 +47,27 @@ angular.module('Medkit', ['ionic', 'Medkit.controllers'])
           templateUrl: 'templates/browse.html'
         }
       }
-    })
-    .state('app.playlists', {
-      url: '/playlists',
+    })*/
+    .state('app.patients', {
+      url: '/patients',
       views: {
         'menuContent' :{
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
+          templateUrl: 'templates/patients.html',
+          controller: 'PatientsCtrl'
         }
       }
     })
 
-    .state('app.single', {
-      url: '/playlists/:playlistId',
+    .state('app.patient', {
+      url: '/patients/:patientId',
       views: {
         'menuContent' :{
-          templateUrl: 'templates/playlist.html',
-          controller: 'PlaylistCtrl'
+          templateUrl: 'templates/patient.html',
+          controller: 'PatientCtrl'
         }
       }
     });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/patients');
 });
 
