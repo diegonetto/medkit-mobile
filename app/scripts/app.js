@@ -66,6 +66,16 @@ angular.module('Medkit', [
           controller: 'PatientCtrl'
         }
       }
+    })
+
+    .state('app.fill', {
+      url: '/fill-prescription',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/fill-prescription.html',
+          controller: 'FillPrescriptionCtrl'
+        }
+      }
     });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/patients');

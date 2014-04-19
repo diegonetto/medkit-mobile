@@ -5,9 +5,9 @@ var API = 'http://192.168.1.148:8080';
 angular.module('Medkit.services', [])
 
 .factory('PatientService', function ($resource) {
-  var Patient = $resource(API + '/patient/:patientId', {}, {
+  var Patient = $resource(API + '/patient/:_id', {}, {
     update: {
-      method: 'PUT',
+      method: 'PUT'
     }
   });
   return Patient;
@@ -40,7 +40,7 @@ angular.module('Medkit.services', [])
 })
 
 .factory('PrescriptionService', function ($resource) {
-  var Prescription = $resource(API + '/prescription/:prescriptionId', {}, {
+  var Prescription = $resource(API + '/prescription/:_id', {}, {
     update: {
       method: 'PUT',
     }
@@ -79,7 +79,7 @@ angular.module('Medkit.services', [])
     console.log('Successfully added NDEF listener');
   }, function () {
     console.log('Error adding NDEF listener');
-  });*/
+  }); */
 
   var NFC = {};
 

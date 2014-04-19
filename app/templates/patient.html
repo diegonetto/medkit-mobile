@@ -1,33 +1,45 @@
 <ion-view title="{{patient.last_name}}, {{patient.first_name}}">
-  <ion-content class="has-header">
-    <div class="card">
-      <div class="item item-divider">
-        Associated Tags
-      </div>
+  <ion-nav-buttons side="right">
+    <a class="button button-clear" href="#/app/fill-prescription"
+      ng-click="fillPrescription()"
+      ng-show="selectedPrescriptions.length > 0">Fill</a>
+    <button class="button button-clear ion-plus-round"
+      ng-click="openModal()"
+      ng-hide="selectedPrescriptions.length > 0"></button>
+  </ion-nav-buttons>
 
-      <div class="item item-divder" ng-hide="patient.tag_id">
+  <ion-content class="has-header">
+    <ion-list can-swipe="true">
+      <div class="item item-icon-left" ng-hide="patient.tag_id">
+        <i class="icon ion-looping"></i>
         Scan a tag
       </div>
-      
-      <div class="item" ng-show="patient.tag_id">
-        {{patient.tag_id}}
-      </div> 
-    </div>
-
-    <div class="list">
-      <div class="item item-divider">
-        Prescriptions
-        <button class="button button-icon ion-plus-round add-float"></button>
+      <div class="item item-icon-left" ng-show="patient.tag_id">
+        <i class="icon ion-card"></i>
+        Patient Tagged
       </div>
-    </div>
 
-    <div class="list card"
-      ng-repeat="prescription in prescriptions">
-      <div class="item">
+      <div class="item item-divider item-icon-left">
+        Prescriptions
+      </div>
+
+      <div class="item item-icon-left" ng-hide="prescriptions[0]">
+        <i class="icon ion-android-information"></i>
+        Add a Prescription
+      </div>
+
+      <ion-item ng-repeat="prescription in prescriptions" can-swipe="true">
+        <ion-option-button class="button-balanced"
+          ng-hide="prescription.selected"
+          ng-click="togglePrescriptionSelect(prescription)">Select</ion-option-button>
+        <ion-option-button class="button-energized"
+          ng-show="prescription.selected"
+          ng-click="togglePrescriptionSelect(prescription)">Deselect</ion-option-button>
+        <ion-option-button class="button-assertive" ng-click="removePrescription(prescription)">Delete</ion-option-button>
         <h2>{{getDrug(prescription.drug_id).brand}} ({{ getDrug(prescription.drug_id).name }})</h2>
         <p>{{prescription.amount}} {{prescription.unit}}, {{prescription.interval}} x {{prescription.intervalType}}</p>
-      </div>
-    </div>
+      </ion-item>
+    </ion-list>
     
   </ion-content>
 </ion-view>

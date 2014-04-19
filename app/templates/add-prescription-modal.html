@@ -1,0 +1,78 @@
+<div class="modal">
+  <ion-header-bar class="bar-assertive">
+    <button class="button button-clear" ng-click="closeModal()">Cancel</button>
+    <h1 class="title">New Prescription</h1>
+  </ion-header-bar>
+
+  <ion-content>
+    <div class="list list-inset">
+
+      <form name="form">
+        <div class="item item-input item-select">
+          <div class="input-label">
+            Drug Name
+          </div>
+          <select
+            ng-model="prescription.drug"
+            required
+            ng-options="drug.name for drug in drugs">
+          </select>
+        </div>
+
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Amount</span>
+          <input type="number" name="amount"
+            ng-model="prescription.amount"
+            required>
+        </label>
+
+        <div class="item item-input item-select">
+          <div class="input-label">
+            Unit
+          </div>
+          <select
+            ng-model="prescription.unit"
+            required
+            ng-options="unit.name for unit in prescriptionEnums.unit">
+          </select>
+        </div>
+
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Interval</span>
+          <input type="number" name="interval"
+            ng-model="prescription.interval"
+            required>
+        </label>
+
+        <div class="item item-input item-select">
+          <div class="input-label">
+            Interval Type
+          </div>
+          <select
+            ng-model="prescription.intervalType"
+            required
+            ng-options="interval.name for interval in prescriptionEnums.interval">
+          </select>
+        </div>
+
+        <div class="item item-input item-select">
+          <div class="input-label">
+            Route
+          </div>
+          <select
+            ng-model="prescription.route"
+            required
+            ng-options="route.name for route in prescriptionEnums.route">
+          </select>
+        </div>
+
+        <button class="button button-block button-assertive"
+          ng-disabled="!form.$valid"
+          ng-click="addPrescription()">
+          Add
+        </button>
+      </form>
+
+    </div>
+  </ion-content>
+</div>
