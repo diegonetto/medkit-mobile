@@ -141,6 +141,8 @@ angular.module('Medkit.controllers', [])
   // Add prescription flow
   $scope.addPrescription = function() {
 
+    console.log('--- PRESCRIPTION UNIT!! ---');
+    console.log($scope.prescription.unit);
     var prescription = new PrescriptionService({
       drug_id: $scope.prescription.drug._id,
       patient_id : $scope.patient._id,
@@ -280,7 +282,7 @@ angular.module('Medkit.controllers', [])
             } else {
               console.log('---- OH NOES ----');
               // FAIL 2: Wrong patient
-              $scope.start();
+              return $scope.start();
             }
           });
           NFCService.deRegister($scope.patientTagCallbackID);

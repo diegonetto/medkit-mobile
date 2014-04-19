@@ -96,6 +96,8 @@ angular.module('Medkit.services', [])
   NFC.register = function (callback) {
     var idx = callbacks.push(callback) - 1;
     console.log('NFCService --- registered callback ' + idx);
+    console.log('--- CB ARRAY ---');
+    console.log(callbacks);
     return idx;
   };
 
@@ -104,6 +106,8 @@ angular.module('Medkit.services', [])
     _.remove(callbacks, function(cb, i) {
       return idx === i;
     });
+    console.log('--- CB ARRAY ---');
+    console.log(callbacks);
   };
 
   return NFC;
