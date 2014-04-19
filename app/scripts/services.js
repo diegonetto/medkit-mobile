@@ -54,7 +54,11 @@ angular.module('Medkit.services', [])
 })
 
 .factory('DosageService', function ($resource) {
-  var Dosage = $resource(API + '/dose/:_id');
+  var Dosage = $resource(API + '/dose/:_id', {}, {
+    update: {
+      method: 'PUT'
+    }
+  });
   return Dosage;
 })
 
@@ -74,7 +78,7 @@ angular.module('Medkit.services', [])
   var callbacks = [];
 
   // Add a listener and invoke each callback with discovered Tag Id.
-/*  nfc.addTagDiscoveredListener(function (NFCevent) {
+  nfc.addTagDiscoveredListener(function (NFCevent) {
     console.log('Disovered a tag!');
     var tagId = btoa(NFCevent.tag.id);
     _.forEach(callbacks, function(cb, idx) {
@@ -84,7 +88,7 @@ angular.module('Medkit.services', [])
     console.log('Successfully added NDEF listener');
   }, function () {
     console.log('Error adding NDEF listener');
-  }); */
+  });
 
   var NFC = {};
 

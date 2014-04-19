@@ -225,7 +225,8 @@ angular.module('Medkit.controllers', [])
     var dosage = new DosageService({
       tag_id: $scope.dosage.tag_id,
       prescriptions: $scope.selectedPrescriptions,
-      patient_id: $scope.patient._id
+      patient_id: $scope.patient._id,
+      state: 'Filled'
     });
     dosage.$save();
     $scope.closeFillModal();
@@ -238,4 +239,69 @@ angular.module('Medkit.controllers', [])
   });
 })
 
-.controller('FillPrescriptionCtrl', function($scope) { });
+.controller('DoseCtrl', function($scope, NFCService, DosageService, PatientService) {
+  $scope.start = function() {
+    console.log('--- Starting Match Making Process ---');
+    $scope.dosage = {};
+    $scope.patient = {};
+    $scope.matchedID = false;
+
+    $scope.doseTagCallbackID = NFCService.register(function (tagId) {
+      console.log('Attempting to fetch doses information ' + tagId);
+      $scope.dosage.tag_id = tagId;
+
+      DosageService.query({ tag_id: $scope.dosage.tag_id, state: 'Filled' }, function(dose) {
+        console.log('---- Dose ----');
+        $scope.dosage = dose[0];
+        console.log(JSON.stringify($scope.dosage));
+
+        NFCService.deRegister($scope.doseTagCallbackID);
+
+        // FAIL 1: Already Dosed
+        if (!$scope.dosage) {
+          console.log('----- WHAT ARE YOU DOING (Already Doesed Fool) -----');
+          return $scope.start();
+        }
+
+        $scope.patientTagCallbackID = NFCService.register(function (tagId) {
+          console.log('Attempting to verify fetch patient information');
+          $scope.patient.tag_id = tagId;
+        
+          PatientService.query({ tag_id: $scope.patient.tag_id }, function (patient) {
+            console.log('---- Patient ----');
+            $scope.patient = patient[0];
+            console.log(JSON.stringify($scope.patient));
+
+            console.log('--- Comparing IDs ---');
+            if ($scope.dosage.patient_id === $scope.patient._id) {
+              console.log('---- RAINBROES & UNIKORNS ----');
+              // SUCCESS! -- MATCHED 
+              $scope.matchedID = true;
+            } else {
+              console.log('---- OH NOES ----');
+              // FAIL 2: Wrong patient
+              $scope.start();
+            }
+          });
+          NFCService.deRegister($scope.patientTagCallbackID);
+        });
+      }, function (err) {
+        console.log(JSON.stringify(err));
+      });
+    });
+  };
+
+  // After a successfull match, enable button and restart
+  $scope.updateDosage = function () {
+    $scope.dosage.state = 'Administered';
+    $scope.dosage.$update({ _id: $scope.dosage._id }, function () {
+      console.log('Updated Dosage state to Administered');
+    }, function (err) {
+      console.log(JSON.stringify(err));
+    });
+    $scope.start();
+  };
+
+  // Kick off the pairing process
+  $scope.start();
+});

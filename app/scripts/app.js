@@ -66,6 +66,16 @@ angular.module('Medkit', [
           controller: 'PatientCtrl'
         }
       }
+    })
+
+    .state('app.dose', {
+      url: '/dose',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/dose.html',
+          controller: 'DoseCtrl'
+        }
+      }
     });
 
   // if none of the above states are matched, use this as the fallback
