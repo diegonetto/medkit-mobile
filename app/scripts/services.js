@@ -1,6 +1,6 @@
 'use strict';
 
-var API = 'http://192.168.1.148:8080';
+var API = '//medkit-api.blacklitelabs.com';
 
 angular.module('Medkit.services', [])
 
