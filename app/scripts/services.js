@@ -1,6 +1,6 @@
 'use strict';
 
-var API = '//medkit-api.blacklitelabs.com';
+var API = 'http://medkit-api.blacklitelabs.com';
 
 angular.module('Medkit.services', [])
 
